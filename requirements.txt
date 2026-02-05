@@ -1,0 +1,4 @@
+Nuitka==2.8.10
+ordered-set==4.1.0
+pyModbusTCP==0.3.0
+zstandard==0.25.0
