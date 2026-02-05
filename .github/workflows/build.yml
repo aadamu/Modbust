@@ -56,13 +56,13 @@ jobs:
         fi
         
         if [ "$RUNNER_OS" == "Windows" ]; then
-          mv build/your_script.exe dist/your_script-${VERSION}-windows.exe
+          mv build/modbust.exe dist/modbust-${VERSION}-windows.exe
         elif [ "$RUNNER_OS" == "Linux" ]; then
-          mv build/your_script.bin dist/your_script-${VERSION}-linux
-          chmod +x dist/your_script-${VERSION}-linux
+          mv build/modbust.bin dist/modbust-${VERSION}-linux
+          chmod +x dist/modbust-${VERSION}-linux
         elif [ "$RUNNER_OS" == "macOS" ]; then
-          mv build/your_script.bin dist/your_script-${VERSION}-macos
-          chmod +x dist/your_script-${VERSION}-macos
+          mv build/modbust.bin dist/modbust-${VERSION}-macos
+          chmod +x dist/modbust-${VERSION}-macos
         fi
     
     - name: Upload artifacts
