@@ -48,14 +48,21 @@ jobs:
       shell: bash
       run: |
         mkdir -p dist
+        # Extract version from tag or use 'dev' for non-tagged builds
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+        else
+          VERSION="dev-${GITHUB_SHA::7}"
+        fi
+        
         if [ "$RUNNER_OS" == "Windows" ]; then
-          mv build/modbust.exe dist/modbust-windows.exe
+          mv build/your_script.exe dist/your_script-${VERSION}-windows.exe
         elif [ "$RUNNER_OS" == "Linux" ]; then
-          mv build/modbust.bin dist/modbust-linux
-          chmod +x dist/modbust-linux
+          mv build/your_script.bin dist/your_script-${VERSION}-linux
+          chmod +x dist/your_script-${VERSION}-linux
         elif [ "$RUNNER_OS" == "macOS" ]; then
-          mv build/modbust.bin dist/modbust-macos
-          chmod +x dist/modbust-macos
+          mv build/your_script.bin dist/your_script-${VERSION}-macos
+          chmod +x dist/your_script-${VERSION}-macos
         fi
     
     - name: Upload artifacts
