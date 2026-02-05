@@ -35,8 +35,8 @@ def get_user_inputs():
     UNIT_ID = int(unit_input) if unit_input else 1
     
     # Get READ_ADDRESS
-    read_addr_input = input("Enter read address [default: 50]: ").strip()
-    READ_ADDRESS = int(read_addr_input) if read_addr_input else 50
+    read_addr_input = input("Enter read address [default: 100]: ").strip()
+    READ_ADDRESS = int(read_addr_input) if read_addr_input else 100
     
     # Get READ_COUNT
     read_count_input = input("Enter number of registers to read [default: 8]: ").strip()
