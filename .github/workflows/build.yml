@@ -32,7 +32,7 @@ jobs:
     - name: Build with Nuitka (Windows)
       if: runner.os == 'Windows'
       run: |
-        python -m nuitka --standalone --onefile --output-dir=build modbust.py
+        python -m nuitka --standalone --onefile --assume-yes-for-downloads --output-dir=build modbust.py
     
     - name: Build with Nuitka (Linux/macOS)
       if: runner.os != 'Windows'
