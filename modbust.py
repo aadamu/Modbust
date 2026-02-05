@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import time
 import random
-import sys
 from pyModbusTCP.client import ModbusClient
 
 def print_banner():
@@ -36,8 +35,8 @@ def get_user_inputs():
     UNIT_ID = int(unit_input) if unit_input else 1
     
     # Get READ_ADDRESS
-    read_addr_input = input("Enter read address [default: 100]: ").strip()
-    READ_ADDRESS = int(read_addr_input) if read_addr_input else 100
+    read_addr_input = input("Enter read address [default: 50]: ").strip()
+    READ_ADDRESS = int(read_addr_input) if read_addr_input else 50
     
     # Get READ_COUNT
     read_count_input = input("Enter number of registers to read [default: 8]: ").strip()
@@ -58,50 +57,33 @@ def get_user_inputs():
     
     return HOST, PORT, UNIT_ID, READ_ADDRESS, READ_COUNT, WRITE_ADDRESS
 
-def main():
-    # Get configuration from user
-    try:
-        HOST, PORT, UNIT_ID, READ_ADDRESS, READ_COUNT, WRITE_ADDRESS = get_user_inputs()
-    except ValueError:
-        print("Error: Invalid input. Please enter numeric values for port, unit ID, and addresses.")
-        sys.exit(1)
-    
-    # Create client
-    client = ModbusClient(host=HOST, port=PORT, unit_id=UNIT_ID, auto_open=True)
-    
-    # Check connection
-    if not client.is_open:
-        print(f"Error: Unable to connect to {HOST}:{PORT}")
-        sys.exit(1)
-    
-    print(f"Connected to {HOST}:{PORT}")
-    
-    try:
-        while True:
-            # Generate random values
-            random_values = [random.randint(1, 999) for _ in range(READ_COUNT)]
-            
-            # Read holding registers
-            regs = client.read_holding_registers(READ_ADDRESS, READ_COUNT)
-            if regs:
-                print(f"Read: {regs}")
-            else:
-                print("Read error")
-            
-            # Write registers
-            if client.write_multiple_registers(WRITE_ADDRESS, random_values):
-                print(f"Write OK: {random_values}")
-            else:
-                print("Write error")
-            
-            # Wait before next iteration
-            time.sleep(2)
-            
-    except KeyboardInterrupt:
-        print("\nShutting down gracefully...")
-    finally:
-        client.close()
-        print("Connection closed")
+# Display banner
+print_banner()
 
-if __name__ == "__main__":
-    main()
+# Get user inputs
+HOST, PORT, UNIT_ID, READ_ADDRESS, READ_COUNT, WRITE_ADDRESS = get_user_inputs()
+
+# Open TCP connection (using the EXACT same method as your original code)
+c = ModbusClient(host=HOST, port=PORT, unit_id=UNIT_ID, auto_open=True)
+
+# loop requests to keep connection open
+while True:
+    # Generate random values
+    random_values = [random.randint(1, 999) for _ in range(READ_COUNT)]
+    
+    # read holding registers
+    regs = c.read_holding_registers(READ_ADDRESS, READ_COUNT)
+    # print holding registers
+    if regs:
+        print(regs)
+    else:
+        print("read error")
+    
+    # write registers
+    if c.write_multiple_registers(WRITE_ADDRESS, random_values):
+        print("write ok")
+    else:
+        print("write error")
+    
+    # wait 2s to start again
+    time.sleep(2)
