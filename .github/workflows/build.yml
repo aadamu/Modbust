@@ -3,6 +3,8 @@ name: Build Executable with Nuitka
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*'  # Triggers on version tags like v1.0.0
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -32,18 +34,51 @@ jobs:
     - name: Build with Nuitka (Windows)
       if: runner.os == 'Windows'
       run: |
-        python -m nuitka --standalone --onefile --assume-yes-for-downloads --output-dir=build modbust.py
+        python -m nuitka --standalone --onefile --assume-yes-for-downloads --output-dir=build your_script.py
     
     - name: Build with Nuitka (Linux/macOS)
       if: runner.os != 'Windows'
       run: |
-        python -m nuitka --standalone --onefile --output-dir=build modbust.py
+        python -m nuitka --standalone --onefile --assume-yes-for-downloads --output-dir=build your_script.py
+    
+    - name: Rename binaries
+      shell: bash
+      run: |
+        mkdir -p dist
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          mv build/your_script.exe dist/your_script-windows.exe
+        elif [ "$RUNNER_OS" == "Linux" ]; then
+          mv build/your_script.bin dist/your_script-linux
+          chmod +x dist/your_script-linux
+        elif [ "$RUNNER_OS" == "macOS" ]; then
+          mv build/your_script.bin dist/your_script-macos
+          chmod +x dist/your_script-macos
+        fi
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: executable-${{ matrix.os }}
-        path: |
-          build/*.exe
-          build/*.bin
-          build/modbust
+        path: dist/*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: binaries
+        merge-multiple: true
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: binaries/*
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
