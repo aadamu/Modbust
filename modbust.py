@@ -4,6 +4,19 @@ import random
 import sys
 from pyModbusTCP.client import ModbusClient
 
+def print_banner():
+    """Display ASCII art banner"""
+    banner = """
+                      __   __                        __      
+ /'\_/`\             /\ \ /\ \                      /\ \__   
+/\      \     ___    \_\ \\ \ \____   __  __    ____\ \ ,_\  
+\ \ \__\ \   / _`\  /'_` \\ \ '__`\ /\ \/\ \  /',__\\ \ \/  
+ \ \ \_/\ \ /\ \L\ \/\ \L\ \\ \ \L\ \\ \ \_\ \/\__, `\\ \ \_ 
+  \ \_\\ \_\\ \____/\ \___,_\\ \_,__/ \ \____/\/\____/ \ \__\\
+   \/_/ \/_/ \/___/  \/__,_ / \/___/   \/___/  \/___/   \/__/
+"""
+    print(banner)
+
 def get_user_inputs():
     """Get configuration from user input with validation"""
     print("=== Modbus TCP Client Configuration ===\n")
