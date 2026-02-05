@@ -45,6 +45,10 @@ def get_user_inputs():
     # Get WRITE_ADDRESS
     write_addr_input = input("Enter write address [default: 100]: ").strip()
     WRITE_ADDRESS = int(write_addr_input) if write_addr_input else 100
+
+    # Get WRITE_COUNT
+    write_count_input = input("Enter number of registers to write [default: 8]: ").strip()
+    WRITE_COUNT = int(read_count_input) if write_count_input else 8
     
     print("\n=== Configuration Summary ===")
     print(f"Host: {HOST}")
@@ -53,23 +57,24 @@ def get_user_inputs():
     print(f"Read Address: {READ_ADDRESS}")
     print(f"Read Count: {READ_COUNT}")
     print(f"Write Address: {WRITE_ADDRESS}")
+    print(f"Write Count: {Write_COUNT}")
     print("=" * 30 + "\n")
     
-    return HOST, PORT, UNIT_ID, READ_ADDRESS, READ_COUNT, WRITE_ADDRESS
+    return HOST, PORT, UNIT_ID, READ_ADDRESS, READ_COUNT, WRITE_ADDRESS, WRITE_COUNT
 
 # Display banner
 print_banner()
 
 # Get user inputs
-HOST, PORT, UNIT_ID, READ_ADDRESS, READ_COUNT, WRITE_ADDRESS = get_user_inputs()
+HOST, PORT, UNIT_ID, READ_ADDRESS, READ_COUNT, WRITE_ADDRESS, WRITE_COUNT = get_user_inputs()
 
-# Open TCP connection (using the EXACT same method as your original code)
+# Open TCP connection
 c = ModbusClient(host=HOST, port=PORT, unit_id=UNIT_ID, auto_open=True)
 
 # loop requests to keep connection open
 while True:
     # Generate random values
-    random_values = [random.randint(1, 999) for _ in range(READ_COUNT)]
+    random_values = [random.randint(1, 999) for _ in range(WRITE_COUNT)]
     
     # read holding registers
     regs = c.read_holding_registers(READ_ADDRESS, READ_COUNT)
