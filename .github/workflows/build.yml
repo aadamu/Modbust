@@ -34,25 +34,25 @@ jobs:
     - name: Build with Nuitka (Windows)
       if: runner.os == 'Windows'
       run: |
-        python -m nuitka --standalone --onefile --assume-yes-for-downloads --output-dir=build your_script.py
+        python -m nuitka --standalone --onefile --assume-yes-for-downloads --output-dir=build modbust.py
     
     - name: Build with Nuitka (Linux/macOS)
       if: runner.os != 'Windows'
       run: |
-        python -m nuitka --standalone --onefile --assume-yes-for-downloads --output-dir=build your_script.py
+        python -m nuitka --standalone --onefile --assume-yes-for-downloads --output-dir=build modbust.py
     
     - name: Rename binaries
       shell: bash
       run: |
         mkdir -p dist
         if [ "$RUNNER_OS" == "Windows" ]; then
-          mv build/your_script.exe dist/your_script-windows.exe
+          mv build/modbust.exe dist/modbust-windows.exe
         elif [ "$RUNNER_OS" == "Linux" ]; then
-          mv build/your_script.bin dist/your_script-linux
-          chmod +x dist/your_script-linux
+          mv build/modbust.bin dist/modbust-linux
+          chmod +x dist/modbust-linux
         elif [ "$RUNNER_OS" == "macOS" ]; then
-          mv build/your_script.bin dist/your_script-macos
-          chmod +x dist/your_script-macos
+          mv build/modbust.bin dist/modbust-macos
+          chmod +x dist/modbust-macos
         fi
     
     - name: Upload artifacts
