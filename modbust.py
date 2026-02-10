@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import time
 import random
+import textwrap
 from pyModbusTCP.client import ModbusClient
+
 
 def print_banner():
     """Display ASCII art banner"""
@@ -14,7 +16,8 @@ def print_banner():
   \ \_\\ \_\\ \____/\ \___,_\\ \_,__/ \ \____/\ /\____/ \ \__\\
    \/_/ \/_/ \/___/  \/__,_ / \/___/   \/___/  \/___/   \/__/ 
 """
-    print(banner)
+    dedented_banner = textwrap.dedent(banner)
+    print(dedented_banner)
 
 def int_input(prompt, default):
     """Prompt for an integer with a default; re-prompt on invalid input."""
@@ -85,15 +88,15 @@ def main():
 
     # loop requests to keep connection open
     while True:
-        try:
-            if not c.is_open():
-                print("Connection closed, attempting to open...")
-                try:
-                    c.open()
-                except Exception as e:
-                    print(f"Reopen failed: {e}")
-                    time.sleep(2)
-                    continue
+        # try:
+        #     if not c.is_open():
+        #         print("Connection closed, attempting to open...")
+        #         try:
+        #             c.open()
+        #         except Exception as e:
+        #             print(f"Reopen failed: {e}")
+        #             time.sleep(2)
+        #             continue
 
             # Generate random values (0..65535 are valid 16-bit register values)
             random_values = [random.randint(0, 65535) for _ in range(WRITE_COUNT)]
@@ -116,17 +119,17 @@ def main():
             # wait 2s to start again
             time.sleep(2)
 
-        except KeyboardInterrupt:
-            print("Interrupted by user, closing connection.")
-            try:
-                c.close()
-            except Exception:
-                pass
-            break
-        except Exception as e:
-            print(f"Error during Modbus operation: {e}")
-            # back off a bit before retrying
-            time.sleep(2)
+        # except KeyboardInterrupt:
+        #     print("Interrupted by user, closing connection.")
+        #     try:
+        #         c.close()
+        #     except Exception:
+        #         pass
+        #     break
+        # except Exception as e:
+        #     print(f"Error during Modbus operation: {e}")
+        #     # back off a bit before retrying
+        #     time.sleep(2)
 
 
 if __name__ == "__main__":
